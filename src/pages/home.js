@@ -103,41 +103,48 @@ const Home = () => {
 
       {/* Row 1: Loan Amount, Interest Rate, Loan Term */}
       <Grid container spacing={2} sx={{ textAlign: 'left' }}>
-        <Grid item xs={12} md={4}>
-          <TextField
-            label="Loan Amount"
-            type="number"
-            fullWidth
-            value={loanAmount}
-            onChange={(e) => setLoanAmount(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {getCurrencySymbol(currency)}
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <TextField
-            label="Interest Rate (%)"
-            type="number"
-            fullWidth
-            value={interestRate}
-            onChange={(e) => setInterestRate(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <TextField
-            label="Loan Term (Years)"
-            type="number"
-            fullWidth
-            value={loanTerm}
-            onChange={(e) => setLoanTerm(e.target.value)}
-          />
-        </Grid>
-      </Grid>
+  <Grid item xs={12} md={4}>
+    <TextField
+      label="Loan Amount"
+      type="number"
+      fullWidth
+      value={loanAmount}
+      onChange={(e) => setLoanAmount(e.target.value)}
+      sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            {getCurrencySymbol(currency)}
+          </InputAdornment>
+        ),
+      }}
+    />
+  </Grid>
+
+  <Grid item xs={12} md={4}>
+    <TextField
+      label="Interest Rate (%)"
+      type="number"
+      fullWidth
+      value={interestRate}
+      onChange={(e) => setInterestRate(e.target.value)}
+      sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
+    />
+  </Grid>
+
+  <Grid item xs={12} md={4}>
+    <TextField
+      label="Loan Term (Years)"
+      type="number"
+      fullWidth
+      value={loanTerm}
+      onChange={(e) => setLoanTerm(e.target.value)}
+      sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
+    />
+  </Grid>
+</Grid>
+
+
 
       {/* Row 2: Calculate Button */}
       <Box sx={{ mt: 3, textAlign: 'left' }}>
@@ -158,28 +165,31 @@ const Home = () => {
       )}
 
       {/* Row 4: Currency and Reset Button */}
-      <Grid container spacing={2} sx={{ mt: 3, textAlign: 'left' }}>
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth>
-            <InputLabel>Currency</InputLabel>
-            <Select
-              value={currency}
-              label="Currency"
-              onChange={(e) => setCurrency(e.target.value)}
-            >
-              <MenuItem value="USD">USD</MenuItem>
-              <MenuItem value="EUR">EUR</MenuItem>
-              <MenuItem value="GBP">GBP</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+      {monthlyPayment && !isNaN(monthlyPayment) && (
+  <Grid container spacing={2} sx={{ mt: 3, textAlign: 'left' }}>
+    <Grid item xs={12} md={6}>
+      <FormControl fullWidth>
+        <InputLabel>Currency</InputLabel>
+        <Select
+          value={currency}
+          label="Currency"
+          onChange={(e) => setCurrency(e.target.value)}
+        >
+          <MenuItem value="USD">USD</MenuItem>
+          <MenuItem value="EUR">EUR</MenuItem>
+          <MenuItem value="GBP">GBP</MenuItem>
+        </Select>
+      </FormControl>
+    </Grid>
 
-        <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-          <Button variant="outlined" color="secondary" onClick={handleReset}>
-            Reset
-          </Button>
-        </Grid>
-      </Grid>
+    <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+      <Button variant="outlined" color="secondary" onClick={handleReset}>
+        Reset
+      </Button>
+    </Grid>
+  </Grid>
+)}
+
 
       {/* Row 5: Amortization Table */}
       {monthlyPayment && !isNaN(monthlyPayment) && (
