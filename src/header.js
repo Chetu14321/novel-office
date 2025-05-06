@@ -3,20 +3,21 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  Button,
+  Switch,
+  Box,
   IconButton,
   Drawer,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  Box,
-  Switch,
   useMediaQuery,
 } from '@mui/material';
 import { Menu } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
 import { ColorModeContext } from './themeContex';
+import { useTheme } from '@mui/material/styles';
 
 const Header = () => {
   const theme = useTheme();
@@ -39,39 +40,74 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {/* Left side: Hamburger + Title */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={toggleDrawer(true)}
-              sx={{ mr: 1 }}
-            >
-              <Menu />
-            </IconButton>
-            <Typography variant="h6" component="div" sx={{ fontSize: '1.6rem' }}>
-              Loan Calculator
-            </Typography>
-          </Box>
+      <AppBar position="static" sx={{ height: 80, justifyContent: 'center' }}>
+        <Toolbar sx={{ minHeight: 80 }}>
+          {isMobile ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              {/* Menu Icon (Left) */}
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleDrawer(true)}
+              >
+                <Menu />
+              </IconButton>
 
-          {/* Right side: Switch */}
-          <Box>
-            <Switch
-              checked={isDark}
-              onChange={colorMode.toggleColorMode}
-              color="default"
-            />
-          </Box>
+              {/* Title (Center) */}
+              <Typography
+                variant="h6"
+                sx={{
+                  flexGrow: 1,
+                  textAlign: 'center',
+                  fontSize: '1.6rem',
+                  ml: -5, // Shift left to counterbalance switch
+                }}
+              >
+                Loan Calculator
+              </Typography>
+
+              {/* Dark Mode Switch (Right) */}
+              <Switch
+                checked={isDark}
+                onChange={colorMode.toggleColorMode}
+                color="default"
+              />
+            </Box>
+          ) : (
+            <>
+              {/* Desktop View: Title on Left, Links, Switch */}
+              <Typography variant="h6" sx={{ flexGrow: 1, fontSize: '1.6rem' }}>
+                Loan Calculator
+              </Typography>
+              {navLinks.map((link) => (
+                <Button
+                  key={link.label}
+                  color="inherit"
+                  component={Link}
+                  to={link.path}
+                  sx={{ fontSize: '1.1rem', mx: 2 }}
+                >
+                  {link.label}
+                </Button>
+              ))}
+              <Box sx={{ display: 'flex', alignItems: 'center', ml: 4 }}>
+                <Switch
+                  checked={isDark}
+                  onChange={colorMode.toggleColorMode}
+                  color="default"
+                  sx={{ mx: 1 }}
+                />
+              </Box>
+            </>
+          )}
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar Drawer */}
+      {/* Drawer for Mobile Navigation */}
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{ width: 250 }}
-          role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
@@ -83,6 +119,14 @@ const Header = () => {
                 </ListItemButton>
               </ListItem>
             ))}
+            <ListItem>
+              <ListItemText primary="Dark Mode" />
+              <Switch
+                checked={isDark}
+                onChange={colorMode.toggleColorMode}
+                color="default"
+              />
+            </ListItem>
           </List>
         </Box>
       </Drawer>

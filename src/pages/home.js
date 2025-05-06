@@ -10,7 +10,7 @@ import {
   Select,
   FormControl,
   InputLabel,
-  InputAdornment,
+  // InputAdornment,
   Table,
   TableBody,
   TableCell,
@@ -95,14 +95,18 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ textAlign: 'left' }}>
+    <Box sx={{ px: { xs: 2, sm: 4 }, py: 3 }}>
       {/* Title */}
-      <Typography variant="h3" gutterBottom sx={{ textAlign: 'left' }}>
+      <Typography
+        variant="h3"
+        gutterBottom
+        sx={{ textAlign: 'left', fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3rem' } }}
+      >
         Loan Calculator Dashboard
       </Typography>
 
-      {/* Row 1: Loan Amount, Interest Rate, Loan Term */}
-      <Grid container spacing={2} sx={{ textAlign: 'left' }}>
+      {/* Row 1: Inputs */}
+      <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
           <TextField
             label="Loan Amount"
@@ -110,17 +114,9 @@ const Home = () => {
             fullWidth
             value={loanAmount}
             onChange={(e) => setLoanAmount(e.target.value)}
-            sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {getCurrencySymbol(currency)}
-                </InputAdornment>
-              ),
-            }}
+            
           />
         </Grid>
-
         <Grid item xs={12} md={4}>
           <TextField
             label="Interest Rate (%)"
@@ -128,10 +124,8 @@ const Home = () => {
             fullWidth
             value={interestRate}
             onChange={(e) => setInterestRate(e.target.value)}
-            sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
           />
         </Grid>
-
         <Grid item xs={12} md={4}>
           <TextField
             label="Loan Term (Years)"
@@ -139,115 +133,112 @@ const Home = () => {
             fullWidth
             value={loanTerm}
             onChange={(e) => setLoanTerm(e.target.value)}
-            sx={{ fontSize: '1.2rem', input: { fontSize: '1.2rem', py: 2.5 } }}
           />
         </Grid>
       </Grid>
 
-      {/* Row 2: Calculate Button */}
-      <Box sx={{ mt: 3, textAlign: 'left' }}>
+      {/* Calculate Button */}
+      <Box sx={{ mt: 3 }}>
         <Button
           variant="contained"
           color="primary"
           onClick={handleCalculate}
-          sx={{
-            fontSize: '1rem', // Increased font size
-            padding: '8px 30px', // Increased padding
-          }}
+          sx={{ fontSize: '1rem', px: 4 }}
         >
           Calculate
         </Button>
       </Box>
 
-      {/* Row 3: Monthly EMI */}
+      {/* Monthly EMI */}
       {monthlyPayment && !isNaN(monthlyPayment) && (
-        <Typography variant="h6" sx={{ mt: 3, textAlign: 'left' }}>
+        <Typography variant="h6" sx={{ mt: 3 }}>
           Monthly EMI: {getCurrencySymbol(currency)}{monthlyPayment}
         </Typography>
       )}
 
-      {/* Row 4: Currency and Reset Button */}
+      {/* Currency Select and Reset */}
       {monthlyPayment && !isNaN(monthlyPayment) && (
-        <Grid container spacing={2} sx={{ mt: 3, textAlign: 'left', paddingBottom:'20px'}}>
-          {/* Currency Box */}
-          <Grid item xs={12} md={8}> {/* Increased size to 8/12 */}
+        <Grid container spacing={2} sx={{ mt: 3 }}>
+          <Grid item xs={12} md={8}>
             <FormControl fullWidth>
               <InputLabel>Currency</InputLabel>
               <Select
                 value={currency}
                 label="Currency"
                 onChange={(e) => setCurrency(e.target.value)}
-                sx={{padding:'8px 12px'}}
               >
                 <MenuItem value="USD">USD</MenuItem>
                 <MenuItem value="EUR">EUR</MenuItem>
                 <MenuItem value="GBP">GBP</MenuItem>
-                <MenuItem value="CAD">CAD</MenuItem> {/* Added CAD */}
-                <MenuItem value="AUD">AUD</MenuItem> {/* Added AUD */}
-                <MenuItem value="JPY">JPY</MenuItem> {/* Added JPY */}
-                <MenuItem value="INR">INR</MenuItem> {/* Added INR */}
+                <MenuItem value="CAD">CAD</MenuItem>
+                <MenuItem value="AUD">AUD</MenuItem>
+                <MenuItem value="JPY">JPY</MenuItem>
+                <MenuItem value="INR">INR</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+          <Grid
+  item
+  xs={12}
+  md={4}
+  sx={{ 
+    display: 'flex', 
+    justifyContent: { xs: 'center', md: 'flex-end' }, // Center button on mobile, right-aligned on desktop
+    marginLeft: { xs: '0', md: 'auto' }, // Remove left margin on mobile, keep it on desktop
+    mt: { xs: 2, sm: 3 }, // Adjust margin for mobile
+  }}
+>
+  <Button
+    variant="outlined"
+    color="secondary"
+    onClick={handleReset}
+    sx={{ fontSize: '1rem' }}
+  >
+    Reset Table
+  </Button>
+</Grid>
 
-          {/* Reset Button Box */}
-          <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'flex-end'}}>
-            <Button variant="outlined" color="secondary" onClick={handleReset}
-              sx={{
-                fontSize: '1.2rem', // Increased font size
-                padding: '6px 12px',
-                marginRight:'1px' 
-                // Increased padding
-              }}
-            >
-              Reset Table
-            </Button>
-          </Grid>
+
         </Grid>
       )}
 
-      {/* Row 5: Amortization Table */}
+      {/* Amortization Table */}
       {monthlyPayment && !isNaN(monthlyPayment) && (
-        <Box sx={{ textAlign: 'left' }}>
-          <Typography variant="h5" gutterBottom sx={{ textAlign: 'left',maxHeight:'80vh' }}>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5" gutterBottom>
             Amortization Schedule ({currency})
           </Typography>
 
-          <TableContainer component={Paper} sx={{ maxHeight: '70vh', overflowY: 'auto', fontSize: '1.2rem' }}>
-            <Table stickyHeader size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                    <strong>Month</strong>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                    <strong>Principal ({getCurrencySymbol(currency)})</strong>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                    <strong>Interest ({getCurrencySymbol(currency)})</strong>
-                  </TableCell>
-                  <TableCell sx={{ textAlign: 'cemter', fontSize: '1.1rem', fontWeight: 'bold' }}>
-                    <strong>Remaining Balance ({getCurrencySymbol(currency)})</strong>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {principalPayment.map((payment, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={{ textAlign: 'center', padding: '16px' }}>{index + 1}</TableCell>
-                    <TableCell sx={{ textAlign: 'center', padding: '16px' }}>{payment}</TableCell>
-                    <TableCell sx={{ textAlign: 'center', padding: '16px' }}>{interestPayment[index]}</TableCell>
-                    <TableCell sx={{ textAlign: 'center', padding: '16px' }}>{remainingBalance[index]}</TableCell>
+          <Box sx={{ overflowX: 'auto' }}>
+            <TableContainer component={Paper} sx={{ minWidth: 600, maxHeight: '70vh' }}>
+              <Table stickyHeader size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center"><strong>Month</strong></TableCell>
+                    <TableCell align="center"><strong>Principal ({getCurrencySymbol(currency)})</strong></TableCell>
+                    <TableCell align="center"><strong>Interest ({getCurrencySymbol(currency)})</strong></TableCell>
+                    <TableCell align="center"><strong>Remaining Balance ({getCurrencySymbol(currency)})</strong></TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {principalPayment.map((payment, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{index + 1}</TableCell>
+                      <TableCell align="center">{payment}</TableCell>
+                      <TableCell align="center">{interestPayment[index]}</TableCell>
+                      <TableCell align="center">{remainingBalance[index]}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
       )}
 
+      {/* Error message */}
       {monthlyPayment === 'Invalid input' && (
-        <Typography color="error" sx={{ mt: 2, textAlign: 'left' }}>
+        <Typography color="error" sx={{ mt: 2 }}>
           Please enter valid positive numbers.
         </Typography>
       )}
